@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var stylus = require('stylus');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -29,8 +29,8 @@ function styluscompile(str, path) {
     .import('nib');
 }
 
-app.use(require('stylus').middleware({
-	src: path.join(__dirname, 'public')
+app.use(stylus.middleware({
+	src: path.join(__dirname, 'public'),
 	compile: styluscompile
 }));
 app.use(express.static(path.join(__dirname, 'public')));

@@ -18,6 +18,7 @@
   "homepage": "https://github.com/ragulbalaji/HCI-Professional-Development-Portal#readme",
   "dependencies": {
     "body-parser": "^1.14.2",
+    "console-stamp": "^0.2.0",
     "cookie-parser": "^1.4.0",
     "debug": "^2.2.0",
     "express": "^4.13.3",

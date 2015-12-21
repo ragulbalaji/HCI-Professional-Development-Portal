@@ -3,31 +3,47 @@
 /**
  * Module dependencies.
  */
-
+process.env.DEBUG = 'HCI-Professional-Development-Portal:server'
 var app = require('../app');
 var debug = require('debug')('HCI-Professional-Development-Portal:server');
 var http = require('http');
+var cluster = require('cluster');
+var numCPUs = require('os').cpus().length;
 
-/**
- * Get port from environment and store in Express.
- */
 
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+if (cluster.isMaster) {
+	// Fork workers.
+	for (var i = 0; i < numCPUs; i++) {
+		cluster.fork();
+	}
 
-/**
- * Create HTTP server.
- */
+	cluster.on('exit', function(worker, code, signal) {
+		debug('worker ' + worker.process.pid + ' died');
+	});
+} else {
+	// Workers can share any TCP connection
+	// In this case it is an HTTP server
+	/**
+	 * Get port from environment and store in Express.
+	 */
 
-var server = http.createServer(app);
+	var port = normalizePort(process.env.PORT || '3000');
+	app.set('port', port);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+	/**
+	 * Create HTTP server.
+	 */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+	var server = http.createServer(app);
+
+	/**
+	 * Listen on provided port, on all network interfaces.
+	 */
+
+	server.listen(port);
+	server.on('error', onError);
+	server.on('listening', onListening);
+}
 
 /**
  * Normalize a port into a number, string, or false.
@@ -86,5 +102,5 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  debug('Listening on ' + bind + '. PID: ' + process.pid);
 }
