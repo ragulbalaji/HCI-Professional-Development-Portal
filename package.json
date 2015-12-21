@@ -1,0 +1,34 @@
+{
+  "name": "hciprofessionaldevelopmentportal",
+  "version": "0.0.1",
+  "description": "HCI Profession Development Portal",
+  "main": "bin/www",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ragulbalaji/HCI-Professional-Development-Portal.git"
+  },
+  "author": "Ragul Balaji, Ho Jie Feng, Sun Yudong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ragulbalaji/HCI-Professional-Development-Portal/issues"
+  },
+  "homepage": "https://github.com/ragulbalaji/HCI-Professional-Development-Portal#readme",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "cookie-parser": "^1.4.0",
+    "debug": "^2.2.0",
+    "express": "^4.13.3",
+    "hbs": "^4.0.0",
+    "lodash": "^3.10.1",
+    "morgan": "^1.6.1",
+    "nib": "^1.1.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "serve-favicon": "^2.3.0",
+    "socket.io": "^1.3.7",
+    "stylus": "^0.53.0"
+  }
+}
