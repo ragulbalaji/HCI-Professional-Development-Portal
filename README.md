@@ -11,7 +11,7 @@ A HCI Professional Development Venture written by Hwa Chong Infocomm and Robotic
 - Hybrid app for both mobile platforms (Apple and Android) OR web app
 - Support uploading and downloading of files and photos (.doc, .ppt, .pdf, .jpeg)
  
-Content:
+Content:  
 1. About the Global Learning Alliance Summit
   * Ethos
   * Theme
