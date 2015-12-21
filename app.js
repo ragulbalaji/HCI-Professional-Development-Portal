@@ -5,11 +5,16 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var stylus = require('stylus');
+var debug = require('debug')('HCIPDP:server');
+var debugio = require('debug')('HCIPDP:socket.io');
+var io = require('socket.io')();
+
+//Routes go here
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-
+app.io = io;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -69,5 +74,8 @@ app.use(function(err, req, res, next) {
   });
 });
 
+io.on('connection',function(socket) {
+    debugio("New Conneciton " + socket.id + " from : " + socket.request.connection.remoteAddress);
+});
 
 module.exports = app;

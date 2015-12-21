@@ -3,9 +3,9 @@
 /**
  * Module dependencies.
  */
-process.env.DEBUG = 'HCI-Professional-Development-Portal:server'
+process.env.DEBUG = 'HCIPDP:server,HCIPDP:socket.io'
 var app = require('../app');
-var debug = require('debug')('HCI-Professional-Development-Portal:server');
+var debug = require('debug')('HCIPDP:server');
 var http = require('http');
 var cluster = require('cluster');
 var numCPUs = require('os').cpus().length;
@@ -35,7 +35,7 @@ if (cluster.isMaster) {
 	 */
 
 	var server = http.createServer(app);
-
+	app.io.attach(server);
 	/**
 	 * Listen on provided port, on all network interfaces.
 	 */
@@ -104,3 +104,9 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind + '. PID: ' + process.pid);
 }
+
+process.on('SIGINT', function () {
+    debug("CLOSING SERVER " + process.pid);
+    process.exit();
+});
+
