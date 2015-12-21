@@ -15,6 +15,7 @@ A HCI Professional Development Venture written by Hwa Chong Infocomm and Robotic
 - Run these commands in the current directory. You will need nodejs and npm
   - npm install
   - node bin/www
+- Navigate to localhost:3000 in your web browser
  
 Content:  
 1. About the Global Learning Alliance Summit
