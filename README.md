@@ -10,6 +10,11 @@ A HCI Professional Development Venture written by Hwa Chong Infocomm and Robotic
 - Launch app by March 2016
 - Hybrid app for both mobile platforms (Apple and Android) OR web app
 - Support uploading and downloading of files and photos (.doc, .ppt, .pdf, .jpeg)
+
+### Launching the app
+- Run these commands in the current directory. You will need nodejs and npm
+  - npm install
+  - node bin/www
  
 Content:  
 1. About the Global Learning Alliance Summit
