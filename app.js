@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var stylus = require('stylus');
+var session = require('express-session');
+var passport = require('passport');
 var debug = require('debug')('HCIPDP:server');
 var debugio = require('debug')('HCIPDP:socket.io');
 var io = require('socket.io')();
@@ -25,6 +27,13 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({
+  secret: 'hcipdp',
+  resave: false,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 function styluscompile(str, path) {
   return stylus(str)
