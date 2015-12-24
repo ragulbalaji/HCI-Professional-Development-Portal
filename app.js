@@ -6,9 +6,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var stylus = require('stylus');
 var session = require('express-session');
+var compression = require('compression');
 var passport = require('passport');
 var debug = require('debug')('HCIPDP:server');
 var debugio = require('debug')('HCIPDP:socket.io');
+//set up socket.io code
 var io = require('socket.io')();
 
 //Routes go here
@@ -21,20 +23,13 @@ app.io = io;
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(session({
+//set up middleware sessions
+var expresssession = session({
   secret: 'hcipdp',
-  resave: false,
-  saveUninitialized: true
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-
+  saveUninitialized: false,
+  resave: true,
+  cookie:{maxAge:6000000}
+});
 function styluscompile(str, path) {
   return stylus(str)
     .set('filename', path)
@@ -43,6 +38,17 @@ function styluscompile(str, path) {
     .import('nib');
 }
 
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(expresssession);
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(compression());
 app.use(stylus.middleware({
 	src: path.join(__dirname, 'public'),
 	compile: styluscompile
@@ -83,8 +89,18 @@ app.use(function(err, req, res, next) {
   });
 });
 
+
+io.use(function(socket, next){
+        // Wrap the express middleware
+        expresssession(socket.request, {}, next);
+});
 io.on('connection',function(socket) {
-    debugio("New Conneciton " + socket.id + " from : " + socket.request.connection.remoteAddress);
+	var user;
+	if(socket.request.session.passport)
+	user = socket.request.session.passport.user || 'none';
+	else user = 'none';
+	debugio(socket.request.session.passport);
+    debugio("New Connection " + socket.id + " from : " + socket.request.connection.remoteAddress + ' User: ' + user);
 });
 
 module.exports = app;
