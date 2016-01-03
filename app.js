@@ -8,6 +8,8 @@ var stylus = require('stylus');
 var session = require('express-session');
 var compression = require('compression');
 var passport = require('passport');
+var nib = require('nib');
+var morganDebug = require('morgan-debug');
 var debug = require('debug')('HCIPDP:server');
 var debugio = require('debug')('HCIPDP:socket.io');
 //set up socket.io code
@@ -34,14 +36,14 @@ function styluscompile(str, path) {
   return stylus(str)
     .set('filename', path)
     .set('compress', true)
-    .use(require('nib')())
+    .use(nib())
     .import('nib');
 }
 
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+app.use(morganDebug('HCIPDP:log','dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -94,12 +96,19 @@ io.use(function(socket, next){
         // Wrap the express middleware
         expresssession(socket.request, {}, next);
 });
+var pinit = passport.initialize();
+io.use(function(socket, next){
+		pinit(socket.request, {}, next);
+});
+var psess = passport.session();
+io.use(function(socket, next){
+		psess(socket.request, {}, next);
+});
 io.on('connection',function(socket) {
 	var user;
-	if(socket.request.session.passport)
-	user = socket.request.session.passport.user || 'none';
+	if(socket.request.isAuthenticated())user = socket.request.user.username;
 	else user = 'none';
-	debugio(socket.request.session.passport);
+	debugio(socket.request.user);
     debugio("New Connection " + socket.id + " from : " + socket.request.connection.remoteAddress + ' User: ' + user);
 });
 
