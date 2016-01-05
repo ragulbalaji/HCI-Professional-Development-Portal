@@ -9,6 +9,7 @@ var session = require('express-session');
 var compression = require('compression');
 var passport = require('passport');
 var nib = require('nib');
+var serveIndex = require('serve-index');
 var morganDebug = require('morgan-debug');
 var debug = require('debug')('HCIPDP:server');
 var debugio = require('debug')('HCIPDP:socket.io');
@@ -56,6 +57,9 @@ app.use(stylus.middleware({
 	compile: styluscompile
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/uploads',serveIndex('uploads', {'icons': true}));
+app.use('/uploads',express.static(path.join(__dirname, 'uploads')));
 
 app.use('/', routes);
 app.use('/users', users);
